@@ -18,6 +18,10 @@ COPY . .
 # В Node 26 флаг --experimental-transform-types удалён, из-за него песочница бота не запускается.
 # Воркер песочницы использует только стираемый TypeScript, поэтому Node 26 справляется без флага.
 RUN sed -i '/--experimental-transform-types/d' integrations/minecraft/src/cognitive/conscious/js-planner-sandbox-runner.ts
+# Загрузчик isolated-vm (node-gyp-build) проверяет /etc/alpine-release. В Node 26 проверка
+# запрещённого пути выбрасывает ошибку, поэтому разрешаем чтение только этого одного файла.
+RUN sed -i "/'--disable-proto=throw',/i\\        '--allow-fs-read=/etc/alpine-release'," integrations/minecraft/src/cognitive/conscious/js-planner-sandbox-runner.ts \
+  && grep -q "allow-fs-read=/etc/alpine-release" integrations/minecraft/src/cognitive/conscious/js-planner-sandbox-runner.ts
 
 # Ставим только Minecraft-бота и его зависимости (+ корень ради tsdown), а не весь монорепозиторий.
 # --ignore-scripts отключает общий postinstall, который собирает ВСЕ пакеты репозитория.
