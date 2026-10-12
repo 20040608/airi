@@ -1,6 +1,6 @@
 # Minecraft-бот AIRI для Railway
 # Контекст сборки: корень репозитория (ваш форк airi). В Railway: RAILWAY_DOCKERFILE_PATH=deploy/railway/minecraft-bot.Dockerfile
-FROM node:26-bookworm
+FROM node:26.7.0-bookworm
 
 # Системные библиотеки для нативных модулей canvas и isolated-vm
 RUN apt-get update \
