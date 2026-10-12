@@ -15,6 +15,10 @@ RUN npm install -g pnpm@11.24.0
 WORKDIR /app
 COPY . .
 
+# В Node 26 флаг --experimental-transform-types удалён, из-за него песочница бота не запускается.
+# Воркер песочницы использует только стираемый TypeScript, поэтому Node 26 справляется без флага.
+RUN sed -i '/--experimental-transform-types/d' integrations/minecraft/src/cognitive/conscious/js-planner-sandbox-runner.ts
+
 # Ставим только Minecraft-бота и его зависимости (+ корень ради tsdown), а не весь монорепозиторий.
 # --ignore-scripts отключает общий postinstall, который собирает ВСЕ пакеты репозитория.
 RUN pnpm install --filter "@proj-airi/root" --filter "@proj-airi/minecraft-bot..." --frozen-lockfile --ignore-scripts
