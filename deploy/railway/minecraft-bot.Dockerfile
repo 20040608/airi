@@ -15,8 +15,15 @@ RUN npm install -g pnpm@11.24.0
 WORKDIR /app
 COPY . .
 
-# Ставим только Minecraft-бота и его зависимости, а не весь монорепозиторий
-RUN pnpm install --filter "@proj-airi/minecraft-bot..." --frozen-lockfile
+# Ставим только Minecraft-бота и его зависимости (+ корень ради tsdown), а не весь монорепозиторий.
+# --ignore-scripts отключает общий postinstall, который собирает ВСЕ пакеты репозитория.
+RUN pnpm install --filter "@proj-airi/root" --filter "@proj-airi/minecraft-bot..." --frozen-lockfile --ignore-scripts
+
+# Собираем нативные модули (canvas, isolated-vm) только для бота
+RUN pnpm rebuild --filter "@proj-airi/minecraft-bot..."
+
+# Собираем пакеты репозитория, от которых зависит бот (server-sdk, server-shared и т.д.)
+RUN pnpm --filter "@proj-airi/minecraft-bot^..." run build
 
 WORKDIR /app/integrations/minecraft
 
