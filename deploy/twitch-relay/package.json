@@ -1,0 +1,13 @@
+{
+  "name": "airi-twitch-relay",
+  "type": "module",
+  "private": true,
+  "description": "Мост: чат Twitch -> чат Minecraft (для AIRI)",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mineflayer": "^4.37.1",
+    "tmi.js": "^1.8.5"
+  }
+}
